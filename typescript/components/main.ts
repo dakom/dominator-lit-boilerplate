@@ -22,9 +22,9 @@ export class Main extends LitElement {
                     <section class="grid-horizontal">
                         <div></div>
                         <section class="content">
-                            <button @click=${on_inc}>+</button>
-                            <div class="amount">${this.amount}</div>
                             <button @click=${on_dec}>-</button>
+                            <div class="amount">${this.amount}</div>
+                            <button @click=${on_inc}>+</button>
                         </section>
                         <div></div>
                     </section>
