@@ -1,0 +1,25 @@
+.main {
+    font-family: sans-serif;
+    height: 100%;
+}
+
+.grid-vertical {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    height: 100%;
+}
+.grid-horizontal {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    font-size: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+}
+.amount {
+    text-align: center;
+}

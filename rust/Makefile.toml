@@ -1,0 +1,111 @@
+[config]
+skip_core_tasks = true
+
+##################
+## Main Entries ##
+##################
+
+[tasks.build]
+run_task = [
+    {name = "build-development", condition = { profiles = [ "development"] } },
+    {name = "build-production", condition = { profiles = [ "production"] } },
+]
+
+[tasks.watch]
+command = "watchexec"
+args = ["-w", "./src", "makers", "build-development"]
+
+[tasks.watch-nowarnings]
+command = "watchexec"
+args = ["-w", "./src", "makers", "build-development-nowarnings"]
+
+[tasks.test-unit]
+command = "cargo"
+args = ["test"]
+toolchain = "nightly"
+
+[tasks.clean]
+script_runner = "@shell"
+ignore_errors = true
+script = [ 
+    "rm -rf ./target",
+    "rm -rf ./pkg"
+]
+
+#################
+## Development ##
+#################
+
+[tasks.build-development]
+run_task = [{name = [
+    "compile-development", 
+    "bindgen-development"
+]}]
+
+[tasks.build-development-nowarnings]
+run_task = [{name = [
+    "compile-development-nowarnings", 
+    "bindgen-development"
+]}]
+
+[tasks.compile-development]
+command = "cargo"
+args = ["build","--features","dev","--target","wasm32-unknown-unknown"]
+toolchain = "nightly"
+
+[tasks.compile-development-nowarnings]
+command = "cargo"
+args = ["build","--features","dev quiet","--target","wasm32-unknown-unknown"]
+toolchain = "nightly"
+# see https://github.com/rust-lang/rust/issues/70070
+# instead, using "quiet" feature and cfg attribute
+# env = { "RUSTFLAGS" = "--allow warnings"}
+
+[tasks.bindgen-development]
+command = "wasm-bindgen"
+args = ["./target/wasm32-unknown-unknown/debug/my_app.wasm","--debug", "--keep-debug", "--target","web","--out-dir","../_static/wasm/app/pkg"]
+
+
+################
+## Production ##
+################
+
+[tasks.build-production]
+run_task = [{name = [
+    "compile-production", 
+    "bindgen-production",
+    "wasmopt-production",
+]}]
+
+[tasks.compile-production]
+command = "cargo"
+args = ["build","--release","--target","wasm32-unknown-unknown"]
+toolchain = "nightly"
+
+[tasks.bindgen-production]
+command = "wasm-bindgen"
+args = ["./target/wasm32-unknown-unknown/release/my_app.wasm", "--target","web","--out-dir","../_static/wasm/app/pkg"]
+
+[tasks.wasmopt-production]
+command = "wasm-opt"
+# if CI fails, try with BINARYEN_demoS=1 in an env
+args = ["-O3","-o","../_static/wasm/app/pkg/my_app_bg.wasm", "../_static/wasm/app/pkg/my_app_bg.wasm"]
+
+############### 
+#### Tests ####
+###############
+
+[tasks.build-test-interop]
+run_task = [{name = [
+    "compile-test-interop", 
+    "bindgen-test-interop",
+]}]
+
+[tasks.compile-test-interop]
+command = "cargo"
+args = ["build","--features","ts_test","--target","wasm32-unknown-unknown"]
+toolchain = "nightly"
+
+[tasks.bindgen-test-interop]
+command = "wasm-bindgen"
+args = ["./target/wasm32-unknown-unknown/debug/my_app.wasm", "--target", "nodejs", "--out-dir", "../_static/wasm/app/pkg"]
