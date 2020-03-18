@@ -2,9 +2,9 @@
 
 ## [LIVE DEMO](https://dakom.github.io/dominator-lit-boilerplate)
 
-* [Rust] DOM is rendered via [Dominator](https://github.com/pauan/rust-dominator)
-* [Typescript] Aesthetics are driven by WebComponents in [lit-element](https://lit-element.polymer-project.org/)
-* [Interop] is handled via tested events
+* App logic is in Rust (DOM handling via [Dominator](https://github.com/pauan/rust-dominator))
+* Dom elements are Typescript Web Components (via [lit-element](https://lit-element.polymer-project.org/))
+* Interop between the two is handled via tested events
 
 # Development
 
@@ -20,3 +20,4 @@ More commands are available via `cargo make`:
 # Prior Art
 
 Much simplified version of [todo-shipyard-lit-dominator](https://github.com/dakom/todo-shipyard-lit-dominator) (e.g. this boilerplate is without the ECS)
+And of course the [Dominator examples](https://github.com/pauan/rust-dominator/tree/master/examples)
